@@ -65,8 +65,6 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
             MyApplication.instance.startActivity(intent)
             setInLiveRoom(true)
             MyApplication.instance.getUiHandler().sendMessage("<<<直播间>>>")
-        }else{
-            setInLiveRoom(false)
         }
     }
 
