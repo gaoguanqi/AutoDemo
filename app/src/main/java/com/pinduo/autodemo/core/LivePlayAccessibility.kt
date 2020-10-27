@@ -3,12 +3,19 @@ package com.pinduo.autodemo.core
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.net.Uri
+import android.os.SystemClock
 import android.text.TextUtils
+import cn.vove7.andro_accessibility_api.api.editor
+import cn.vove7.andro_accessibility_api.api.withDesc
+import cn.vove7.andro_accessibility_api.api.withId
+import cn.vove7.andro_accessibility_api.api.withText
+import cn.vove7.andro_accessibility_api.utils.whileWaitTime
 import com.pinduo.auto.app.global.Constants
 import com.pinduo.auto.widget.observers.ObserverListener
 import com.pinduo.auto.widget.observers.ObserverManager
 import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.utils.LogUtils
+import okhttp3.internal.wait
 
 class LivePlayAccessibility private constructor() : BaseAccessbility(), ObserverListener {
 
@@ -48,12 +55,25 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
 
     // 发评论
     fun doSpeak(content: String) {
-
+        withText("说点什么...")?.await(3000L)?.globalClick()?.let {
+            if(it){
+                SystemClock.sleep(1000L)
+                withId("com.ss.android.ugc.aweme:id/b9q")?.await(3000L)?.childAt(0)?.trySetText(content)?.let {
+                    if(it){
+                        withDesc("发送")?.await(1000L)?.globalClick()?.let {
+                            if(it){
+                                LogUtils.logGGQ("评论成功")
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // 过滤 SPACE_TIME 事件内的重复页面
-    var lastClickTime: Long = 0
-    var SPACE_TIME: Long = 3000
+    var lastClickTime: Long = 0L
+    var SPACE_TIME: Long = 3000L
 
     private fun startLiveRoom(zhiboNum:String) {
         setLiveURI(zhiboNum)
@@ -65,6 +85,7 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
             MyApplication.instance.startActivity(intent)
             setInLiveRoom(true)
             MyApplication.instance.getUiHandler().sendMessage("<<<直播间>>>")
+            doSpeak("我来啦，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈")
         }
     }
 

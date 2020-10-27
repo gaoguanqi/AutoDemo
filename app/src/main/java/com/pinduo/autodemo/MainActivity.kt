@@ -11,6 +11,7 @@ import com.pinduo.auto.app.global.Constants
 import com.pinduo.auto.utils.PermissionUtil
 import com.pinduo.auto.utils.RequestPermission
 import com.pinduo.autodemo.ui.HomeActivity
+import com.pinduo.autodemo.ui.TestActivity
 import com.pinduo.autodemo.utils.IMEIUtils
 import com.tbruyelle.rxpermissions2.RxPermissions
 
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         PermissionUtil.applyPermissions(object : RequestPermission {
             override fun onRequestPermissionSuccess() {
                 launchTarget()
+//                launchTest()
             }
 
             override fun onRequestPermissionFailure(permissions: List<String>) {
@@ -50,6 +52,12 @@ class MainActivity : AppCompatActivity() {
     private fun launchTarget() {
         IMEIUtils.setIMEI(IMEIUtils.getDeviceId()!!)
         startActivity(Intent(MainActivity@ this, HomeActivity::class.java))
+        finish()
+    }
+    
+    
+    private fun launchTest(){
+        startActivity(Intent(MainActivity@ this, TestActivity::class.java))
         finish()
     }
 

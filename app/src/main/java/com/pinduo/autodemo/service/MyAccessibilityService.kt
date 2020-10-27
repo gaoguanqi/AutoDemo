@@ -5,6 +5,8 @@ import android.text.TextUtils
 import android.view.accessibility.AccessibilityManager
 import cn.vove7.andro_accessibility_api.AccessibilityApi
 import cn.vove7.andro_accessibility_api.AppScope
+import cn.vove7.andro_accessibility_api.api.withId
+import cn.vove7.andro_accessibility_api.api.withText
 import com.pinduo.auto.app.global.Constants
 import com.pinduo.auto.http.entity.TaskEntity
 import com.pinduo.auto.im.OnSocketListener
@@ -39,6 +41,10 @@ class MyAccessibilityService :AccessibilityApi(){
     override fun onPageUpdate(currentScope: AppScope) {
         super.onPageUpdate(currentScope)
         currentScope?.let {
+            LogUtils.logGGQ("className：${it.pageName}")
+//            if(TextUtils.equals(it.pageName,"android.app.Dialog")){
+//                withId("com.ss.android.ugc.aweme:id/xd")?.globalClick()
+//            }
             if(TextUtils.equals(Constants.GlobalValue.douyinPackage,it.packageName)){
                 when(it.pageName){
                     Constants.Douyin.PAGE_MAIN ->{
@@ -55,7 +61,12 @@ class MyAccessibilityService :AccessibilityApi(){
     }
 
     override fun onCreate() {
+        //must 基础无障碍
+        baseService = this
         super.onCreate()
+        //must 高级无障碍
+        AccessibilityApi.gestureService = this
+
         CommonAccessbility.INSTANCE.initService(this)
         LivePlayAccessibility.INSTANCE.initService(this)
 
@@ -142,13 +153,13 @@ class MyAccessibilityService :AccessibilityApi(){
     }
 
     private fun stopTask(isNormal:Boolean = true) {
-        LivePlayAccessibility.INSTANCE.setInLiveRoom(false)
-        LivePlayAccessibility.INSTANCE.setLiveURI("")
         if (isNormal && LivePlayAccessibility.INSTANCE.isInLiveRoom()) {
             socketClient.sendParentSuccess()
         } else {
             socketClient.sendParentError()
         }
+        LivePlayAccessibility.INSTANCE.setInLiveRoom(false)
+        LivePlayAccessibility.INSTANCE.setLiveURI("")
         ObserverManager.instance.remove(Constants.Task.task3)
         CommonAccessbility.INSTANCE.douyin2Main()
         if(isNormal){
@@ -167,5 +178,13 @@ class MyAccessibilityService :AccessibilityApi(){
                 runnable.onReStart("app","task",max)
             }
         }
+    }
+
+    override fun onDestroy() {
+        //must 基础无障碍
+        baseService = null
+        super.onDestroy()
+        //must 高级无障碍
+        AccessibilityApi.gestureService = null
     }
 }

@@ -5,6 +5,8 @@ import android.app.Application
 import android.view.View
 import androidx.lifecycle.ProcessLifecycleOwner
 import cn.vove7.andro_accessibility_api.AccessibilityApi
+import com.birbit.android.jobqueue.JobManager
+import com.birbit.android.jobqueue.config.Configuration
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.Utils
@@ -20,6 +22,8 @@ import com.yhao.floatwindow.*
 class MyApplication:Application() {
 
     private lateinit var uiHandler:UiHandler
+    private lateinit var jobManager:JobManager
+
     companion object {
         @JvmStatic
         lateinit var instance: MyApplication
@@ -30,11 +34,20 @@ class MyApplication:Application() {
         return uiHandler
     }
 
+    fun getJobManager():JobManager{
+        return jobManager
+    }
+
     override fun onCreate() {
         super.onCreate()
         instance = this
         this.uiHandler = UiHandler()
+        configureJobManager()
         initConfig()
+    }
+
+    private fun configureJobManager() {
+        jobManager = JobManager(Configuration.Builder(this).build())
     }
 
     private fun initConfig() {
@@ -43,7 +56,8 @@ class MyApplication:Application() {
         registerActivityLifecycleCallbacks(AppLifeCycleCallBack())
         ProcessLifecycleOwner.get().lifecycle.addObserver(ForebackLifeObserver())
         AccessibilityApi.apply {
-            BASE_SERVICE_CLS = MyAccessibilityService::class.java
+            BASE_SERVICE_CLS = MyAccessibilityService::class.java // 基础无障碍
+            GESTURE_SERVICE_CLS = MyAccessibilityService::class.java // 高级无障碍
         }
         initFloatWindow()
     }
