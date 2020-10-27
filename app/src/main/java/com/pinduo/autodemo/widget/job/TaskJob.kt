@@ -7,12 +7,13 @@ import com.birbit.android.jobqueue.Params
 import com.birbit.android.jobqueue.RetryConstraint
 import com.blankj.utilcode.util.ToastUtils
 import com.pinduo.autodemo.app.MyApplication
+import com.pinduo.autodemo.core.LivePlayAccessibility
 import com.pinduo.autodemo.utils.LogUtils
 
 
-class TaskJob(val text: String?) : Job(
-    Params(PRIORITY).requireNetwork().persist()
-) {
+class TaskJob(val text: String) : Job(
+    Params(PRIORITY).requireNetwork().persist().groupBy("job")) {
+
     override fun onAdded() {
         LogUtils.logGGQ("job onAdded")
     }
@@ -20,9 +21,8 @@ class TaskJob(val text: String?) : Job(
     @Throws(Throwable::class)
     override fun onRun() {
         LogUtils.logGGQ("job onRun:${text}")
-        MyApplication.instance.getUiHandler().postDelayed({
-            ToastUtils.showShort("任务：${text}")
-        },5000)
+
+        LivePlayAccessibility.INSTANCE.doSpeak(text)
     }
 
     override fun shouldReRunOnThrowable(

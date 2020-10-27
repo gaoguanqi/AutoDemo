@@ -103,10 +103,10 @@ class SocketClient private constructor(){
                 try {
                     args?.let {
                         val arg = it[0]
-                        arg?.let {
-                            LogUtils.logGGQ("收到消息:${it}")
-                            val taskEntity:TaskEntity = Gson().fromJson<TaskEntity>(it.toString(),TaskEntity::class.java)
-                            listener?.let { it.call(taskEntity) }?:let {  LogUtils.logGGQ("listener is null") }
+                        arg?.let {it1 ->
+                            LogUtils.logGGQ("收到消息:${it1}")
+                            val taskEntity:TaskEntity = Gson().fromJson<TaskEntity>(it1.toString(),TaskEntity::class.java)
+                            listener?.let { it2 -> it2.call(taskEntity) }?:let {  LogUtils.logGGQ("listener is null") }
                         }?:let {
                             LogUtils.logGGQ("arg is null")
                         }
@@ -140,6 +140,8 @@ class SocketClient private constructor(){
     // 回馈
     fun onReceiveStatus(){
         sendMessage(RECEIVE_STATUS,"1")
+        uiHandler.sendMessage(">>>>>回馈<<<<<<")
+
     }
 
     // 父任务成功
@@ -154,12 +156,12 @@ class SocketClient private constructor(){
 
     // 子任务成功
     fun sendSuccess(){
-        sendMessage(EVENT_TASK,"status=1")
+        //sendMessage(EVENT_TASK,"status=1")
     }
 
     // 子任务失败
     fun sendError(){
-        sendMessage(EVENT_TASK,"status=0")
+        //sendMessage(EVENT_TASK,"status=0")
     }
 
 

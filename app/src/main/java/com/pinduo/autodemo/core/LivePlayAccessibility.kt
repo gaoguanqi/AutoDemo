@@ -5,12 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.SystemClock
 import android.text.TextUtils
-import cn.vove7.andro_accessibility_api.api.editor
-import cn.vove7.andro_accessibility_api.api.withDesc
-import cn.vove7.andro_accessibility_api.api.withId
-import cn.vove7.andro_accessibility_api.api.withText
+import cn.vove7.andro_accessibility_api.api.*
 import cn.vove7.andro_accessibility_api.utils.whileWaitTime
 import com.pinduo.auto.app.global.Constants
+import com.pinduo.auto.im.SocketClient
+import com.pinduo.auto.utils.WaitUtil
 import com.pinduo.auto.widget.observers.ObserverListener
 import com.pinduo.auto.widget.observers.ObserverManager
 import com.pinduo.autodemo.app.MyApplication
@@ -40,9 +39,18 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
 
 
 
+
     override fun initService(service: AccessibilityService) {
         super.initService(service)
+
     }
+
+    private var socketClient:SocketClient? = null
+    fun getSocketClient():SocketClient? = socketClient
+    fun setSocketClient(socket:SocketClient){
+        this.socketClient = socket
+    }
+
 
 
 
@@ -55,21 +63,62 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
 
     // 发评论
     fun doSpeak(content: String) {
+//        withText("说点什么...")?.await(3000L)?.globalClick()?.let {
+//            if(it){
+//                SystemClock.sleep(1000L)
+//                withId("com.ss.android.ugc.aweme:id/b9q")?.await(3000L)?.childAt(0)?.trySetText(content)?.let {
+//                    if(it){
+//                        withDesc("发送")?.await(1000L)?.globalClick()?.let {
+//                            if(it){
+//                                LogUtils.logGGQ("评论成功")
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
         withText("说点什么...")?.await(3000L)?.globalClick()?.let {
-            if(it){
-                SystemClock.sleep(1000L)
-                withId("com.ss.android.ugc.aweme:id/b9q")?.await(3000L)?.childAt(0)?.trySetText(content)?.let {
-                    if(it){
-                        withDesc("发送")?.await(1000L)?.globalClick()?.let {
-                            if(it){
-                                LogUtils.logGGQ("评论成功")
+            // 3秒之内 成功查找到节点
+            if(it){ //成功点击了该节点
+                WaitUtil.sleep(1000L) //延时1秒
+                withId("com.ss.android.ugc.aweme:id/b9q")?.await(3000L)?.childAt(0)?.trySetText(content)?.let { it1 ->
+                    //3秒之内 成功查找到该节点的第0个子节点尝试设置评论内容
+                    if(it1){
+                        // 设置评论内容成功
+                        withDesc("发送")?.await(1000L)?.globalClick()?.let { it2 ->
+                            //1秒内 成功查找到该节点
+                            if(it2){
+                                //成功点击了该节点
+                                MyApplication.instance.getUiHandler().sendMessage("评论成功:${content}")
+                                getSocketClient()?.sendSuccess()
                             }
+                        }?:let {
+                            //
+//                            back()
+                            MyApplication.instance.getUiHandler().sendMessage("评论失败1")
+                            getSocketClient()?.sendError()
                         }
                     }
+                }?:let {
+//                    back()
+                    MyApplication.instance.getUiHandler().sendMessage("评论失败2")
+                    getSocketClient()?.sendError()
                 }
+            }else{
+                //点击该节点失败
+                MyApplication.instance.getUiHandler().sendMessage("评论失败3")
+                getSocketClient()?.sendError()
             }
+        }?:let {
+            // 3秒之内未找到该节点
+            MyApplication.instance.getUiHandler().sendMessage("评论失败4")
+            getSocketClient()?.sendError()
         }
     }
+
+
+
 
     // 过滤 SPACE_TIME 事件内的重复页面
     var lastClickTime: Long = 0L
@@ -85,7 +134,6 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
             MyApplication.instance.startActivity(intent)
             setInLiveRoom(true)
             MyApplication.instance.getUiHandler().sendMessage("<<<直播间>>>")
-            doSpeak("我来啦，哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈")
         }
     }
 

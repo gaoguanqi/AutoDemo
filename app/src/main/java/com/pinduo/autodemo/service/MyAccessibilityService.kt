@@ -7,6 +7,8 @@ import cn.vove7.andro_accessibility_api.AccessibilityApi
 import cn.vove7.andro_accessibility_api.AppScope
 import cn.vove7.andro_accessibility_api.api.withId
 import cn.vove7.andro_accessibility_api.api.withText
+import com.birbit.android.jobqueue.Job
+import com.birbit.android.jobqueue.callback.JobManagerCallback
 import com.pinduo.auto.app.global.Constants
 import com.pinduo.auto.http.entity.TaskEntity
 import com.pinduo.auto.im.OnSocketListener
@@ -18,8 +20,11 @@ import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.core.CommonAccessbility
 import com.pinduo.autodemo.core.LivePlayAccessibility
 import com.pinduo.autodemo.utils.LogUtils
+import com.pinduo.autodemo.utils.TaskUtils
+import com.pinduo.autodemo.widget.job.TaskJob
 import com.yhao.floatwindow.FloatWindow
 import okhttp3.internal.concurrent.TaskQueue
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -41,7 +46,7 @@ class MyAccessibilityService :AccessibilityApi(){
     override fun onPageUpdate(currentScope: AppScope) {
         super.onPageUpdate(currentScope)
         currentScope?.let {
-            LogUtils.logGGQ("className：${it.pageName}")
+            LogUtils.logQ("className：${it.pageName}")
 //            if(TextUtils.equals(it.pageName,"android.app.Dialog")){
 //                withId("com.ss.android.ugc.aweme:id/xd")?.globalClick()
 //            }
@@ -57,7 +62,6 @@ class MyAccessibilityService :AccessibilityApi(){
                 }
             }
         }
-
     }
 
     override fun onCreate() {
@@ -69,6 +73,35 @@ class MyAccessibilityService :AccessibilityApi(){
 
         CommonAccessbility.INSTANCE.initService(this)
         LivePlayAccessibility.INSTANCE.initService(this)
+        LivePlayAccessibility.INSTANCE.setSocketClient(socketClient)
+
+        MyApplication.instance.getJobManager().addCallback(object :
+            JobManagerCallback{
+            override fun onJobRun(job: Job, resultCode: Int) {
+                LogUtils.logGGQ("onJobRun：${job}---${resultCode}")
+            }
+
+            override fun onDone(job: Job) {
+                LogUtils.logGGQ("onDone：${job}")
+
+            }
+
+            override fun onAfterJobRun(job: Job, resultCode: Int) {
+                LogUtils.logGGQ("onAfterJobRun：${job}---${resultCode}")
+            }
+
+            override fun onJobCancelled(
+                job: Job,
+                byCancelRequest: Boolean,
+                throwable: Throwable?) {
+                LogUtils.logGGQ("onJobCancelled：${job}---${byCancelRequest}---${throwable}")
+
+            }
+
+            override fun onJobAdded(job: Job) {
+                LogUtils.logGGQ("onJobAdded：${job}")
+            }
+        })
 
         (getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager).addAccessibilityStateChangeListener {
             LogUtils.logGGQ("AccessibilityManager：${it}")
@@ -127,6 +160,11 @@ class MyAccessibilityService :AccessibilityApi(){
                     uiHandler.sendMessage(message)
                 }
 
+                if(!TextUtils.isEmpty(task) && TextUtils.equals(task,Constants.Task.task3)){
+                    // 任务3 接收到数据 要回馈
+                    socketClient.onReceiveStatus()
+                }
+
                 if(!TextUtils.isEmpty(message) && TextUtils.equals(message,"stop")){
                     stopTask()
                     return
@@ -144,13 +182,19 @@ class MyAccessibilityService :AccessibilityApi(){
                         }
 
                         Constants.Task.task4 -> {
-
+                            haList.forEach {
+                                    MyApplication.instance.getJobManager().addJobInBackground(TaskJob(it)) {
+                                }
+                            }
                         }
                     }
                 }
             }
         })
     }
+
+    private val haList = listOf<String>("1","2","3","4","5","6","7","8","9","10")
+
 
     private fun stopTask(isNormal:Boolean = true) {
         if (isNormal && LivePlayAccessibility.INSTANCE.isInLiveRoom()) {
