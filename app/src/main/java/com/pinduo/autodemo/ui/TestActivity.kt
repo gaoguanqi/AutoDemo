@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.pinduo.autodemo.R
 import com.pinduo.autodemo.app.MyApplication
-import com.pinduo.autodemo.widget.job.TaskJob
+import com.pinduo.autodemo.core.job.TaskJob
 import kotlinx.android.synthetic.main.activity_test.*
 
 class TestActivity : AppCompatActivity() {

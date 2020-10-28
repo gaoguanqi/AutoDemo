@@ -24,6 +24,8 @@ class MyApplication:Application() {
     private lateinit var uiHandler:UiHandler
     private lateinit var jobManager:JobManager
 
+
+
     companion object {
         @JvmStatic
         lateinit var instance: MyApplication
@@ -37,6 +39,8 @@ class MyApplication:Application() {
     fun getJobManager():JobManager{
         return jobManager
     }
+
+
 
     override fun onCreate() {
         super.onCreate()

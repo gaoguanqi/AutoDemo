@@ -38,6 +38,8 @@ class Constants {
         const val task2 = "2"
         const val task3 = "3"
         const val task4 = "4"
+        const val task5 = "5"
+        const val task6 = "6"
 
 
 

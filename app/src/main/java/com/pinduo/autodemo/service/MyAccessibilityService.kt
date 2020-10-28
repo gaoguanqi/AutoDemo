@@ -14,11 +14,12 @@ import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.app.global.Constants
 import com.pinduo.autodemo.core.CommonAccessbility
 import com.pinduo.autodemo.core.LivePlayAccessibility
+import com.pinduo.autodemo.core.data.TaskData
+import com.pinduo.autodemo.core.job.*
 import com.pinduo.autodemo.http.entity.TaskEntity
 import com.pinduo.autodemo.im.OnSocketListener
 import com.pinduo.autodemo.im.SocketClient
 import com.pinduo.autodemo.utils.LogUtils
-import com.pinduo.autodemo.widget.job.TaskJob
 import com.yhao.floatwindow.FloatWindow
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -66,39 +67,44 @@ class MyAccessibilityService :AccessibilityApi(){
         //must 高级无障碍
         AccessibilityApi.gestureService = this
 
-        for (index in 0..30){
-            haList.add(index.toString())
-        }
+//        for (index in 0..30){
+//            haList.add(index.toString())
+//        }
+
+        haList.add("我来了")
+        haList.add("点赞")
+        haList.add("哈哈哈")
+        haList.add("呵呵呵")
+        haList.add("嗯")
+        haList.add("太好了")
 
         CommonAccessbility.INSTANCE.initService(this)
         LivePlayAccessibility.INSTANCE.initService(this)
         LivePlayAccessibility.INSTANCE.setSocketClient(socketClient)
-
         MyApplication.instance.getJobManager().addCallback(object :
             JobManagerCallback{
             override fun onJobRun(job: Job, resultCode: Int) {
-                LogUtils.logGGQ("onJobRun：${job}---${resultCode}")
+                LogUtils.logGGQ("onJobRun：${(job as BaseJob).data.task}---${resultCode}")
             }
 
             override fun onDone(job: Job) {
-                LogUtils.logGGQ("onDone：${job}")
-
+                LogUtils.logGGQ("onDone：${(job as BaseJob).data.task}")
             }
 
             override fun onAfterJobRun(job: Job, resultCode: Int) {
-                LogUtils.logGGQ("onAfterJobRun：${job}---${resultCode}")
+                LogUtils.logGGQ("onAfterJobRun：${(job as BaseJob).data.task}---${resultCode}")
             }
 
             override fun onJobCancelled(
                 job: Job,
                 byCancelRequest: Boolean,
                 throwable: Throwable?) {
-                LogUtils.logGGQ("onJobCancelled：${job}---${byCancelRequest}---${throwable}")
+                LogUtils.logGGQ("onJobCancelled：${(job as BaseJob).data.task}---${byCancelRequest}---${throwable}")
 
             }
 
             override fun onJobAdded(job: Job) {
-                LogUtils.logGGQ("onJobAdded：${job}")
+                LogUtils.logGGQ("onJobAdded：${(job as BaseJob).data.task}")
             }
         })
 
@@ -182,7 +188,17 @@ class MyAccessibilityService :AccessibilityApi(){
 
                         Constants.Task.task4 -> {
                             haList.forEach {
-                                    MyApplication.instance.getJobManager().addJobInBackground(TaskJob(it)) {
+                                MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task,content = it))){
+                                    //回调
+                                }
+                            }
+                        }
+
+                        Constants.Task.task6 ->{
+                            val zxTime:String = entity.zhixing_time
+                            if(!TextUtils.isEmpty(zxTime) && zxTime.toLong() > 0){
+                                MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task,zxTime = (zxTime.toLong() * 1000L)))){
+                                    //回调
                                 }
                             }
                         }

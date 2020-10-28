@@ -1,10 +1,14 @@
 package com.pinduo.autodemo.core
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
 import android.content.Intent
+import android.graphics.Path
 import android.net.Uri
 import android.text.TextUtils
+import android.view.accessibility.AccessibilityNodeInfo
 import cn.vove7.andro_accessibility_api.api.*
+import com.blankj.utilcode.util.ScreenUtils
 import com.pinduo.autodemo.app.global.Constants
 import com.pinduo.autodemo.im.SocketClient
 import com.pinduo.autodemo.utils.WaitUtil
@@ -12,6 +16,7 @@ import com.pinduo.autodemo.widget.observers.ObserverListener
 import com.pinduo.autodemo.widget.observers.ObserverManager
 import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.utils.LogUtils
+import java.util.*
 
 class LivePlayAccessibility private constructor() : BaseAccessbility(), ObserverListener {
 
@@ -152,4 +157,59 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
         }
     }
 
+
+    // 点赞
+    private var timer:Timer? = null
+    private var clickCount = 0
+
+
+    fun doGiveLike(s:Long){
+        val path = Path()
+        val x = ScreenUtils.getScreenWidth() - 50.toFloat()
+        val y = 10f
+        val period = 500L
+        path.moveTo(x, y)
+        val count = (s / period).toInt()
+        val builder = GestureDescription.Builder()
+        val gestureDescription =
+            builder.addStroke(GestureDescription.StrokeDescription(path, 10L, 1L)).build()
+        timer = Timer()
+        val timerTask: TimerTask = object : TimerTask() {
+            override fun run() {
+                service.dispatchGesture(
+                    gestureDescription,
+                    MyGestureResultCallback(object :MyGestureResultListener{
+                        override fun onDone(b: Boolean) {
+                            clickCount++
+                            MyApplication.instance.getUiHandler().sendMessage("${count}次--${clickCount}次-->>${b}")
+                        }
+                    }),
+                    null
+                )
+
+                if(clickCount >= count){
+                    timer?.cancel()
+                    timer = null
+                }
+            }
+        }
+        timer?.schedule(timerTask, 0L, period) //立即
+    }
+
+
+    inner class MyGestureResultCallback(val listener:MyGestureResultListener): AccessibilityService.GestureResultCallback() {
+        override fun onCompleted(gestureDescription: GestureDescription?) {
+            super.onCompleted(gestureDescription)
+            listener.onDone(true)
+        }
+
+        override fun onCancelled(gestureDescription: GestureDescription?) {
+            super.onCancelled(gestureDescription)
+            listener.onDone(false)
+        }
+    }
+
+    interface MyGestureResultListener{
+        fun onDone(b:Boolean)
+    }
 }

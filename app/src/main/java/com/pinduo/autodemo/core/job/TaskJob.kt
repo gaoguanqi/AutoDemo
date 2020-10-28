@@ -1,4 +1,4 @@
-package com.pinduo.autodemo.widget.job
+package com.pinduo.autodemo.core.job
 
 import androidx.annotation.Nullable
 import com.birbit.android.jobqueue.CancelReason
@@ -8,7 +8,7 @@ import com.birbit.android.jobqueue.RetryConstraint
 import com.pinduo.autodemo.core.LivePlayAccessibility
 import com.pinduo.autodemo.utils.LogUtils
 
-
+//测试
 class TaskJob(val text: String) : Job(
     Params(PRIORITY).requireNetwork().persist().groupBy("job")) {
 

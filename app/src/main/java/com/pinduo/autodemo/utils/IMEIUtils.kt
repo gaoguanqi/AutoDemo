@@ -16,7 +16,8 @@ class IMEIUtils {
         }
 
         fun getDeviceId():String?{
-            return DeviceUtils.getAndroidID()
+//            return DeviceUtils.getAndroidID()
+            return "a1dc791e63a9d89a"
         }
     }
 }
