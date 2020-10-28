@@ -1,4 +1,4 @@
-package com.pinduo.auto.utils
+package com.pinduo.autodemo.utils
 
 interface RequestPermission {
     /**

@@ -10,10 +10,10 @@ import com.birbit.android.jobqueue.config.Configuration
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.Utils
-import com.pinduo.auto.app.manager.AppLifeCycleCallBack
-import com.pinduo.auto.app.manager.ForebackLifeObserver
-import com.pinduo.auto.extensions.layoutInflater
+import com.pinduo.autodemo.app.manager.AppLifeCycleCallBack
+import com.pinduo.autodemo.app.manager.ForebackLifeObserver
 import com.pinduo.autodemo.R
+import com.pinduo.autodemo.extensions.layoutInflater
 import com.pinduo.autodemo.service.MyAccessibilityService
 import com.pinduo.autodemo.utils.LogUtils
 import com.pinduo.autodemo.utils.UiHandler

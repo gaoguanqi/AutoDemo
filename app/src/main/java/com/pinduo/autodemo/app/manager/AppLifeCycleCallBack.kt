@@ -1,4 +1,4 @@
-package com.pinduo.auto.app.manager
+package com.pinduo.autodemo.app.manager
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle

@@ -1,9 +1,9 @@
-package com.pinduo.auto.im
+package com.pinduo.autodemo.im
 
 import android.text.TextUtils
 import com.google.gson.Gson
-import com.pinduo.auto.app.config.Config
-import com.pinduo.auto.http.entity.TaskEntity
+import com.pinduo.autodemo.app.config.Config
+import com.pinduo.autodemo.http.entity.TaskEntity
 import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.utils.IMEIUtils
 import com.pinduo.autodemo.utils.LogUtils
@@ -22,7 +22,7 @@ class SocketClient private constructor(){
     private val RECEIVE_STATUS:String = "receive_status"
 
     private var socket:Socket? = null
-    private var listener:OnSocketListener? = null
+    private var listener: OnSocketListener? = null
 
     private val uiHandler by lazy { MyApplication.instance.getUiHandler() }
 
@@ -105,7 +105,8 @@ class SocketClient private constructor(){
                         val arg = it[0]
                         arg?.let {it1 ->
                             LogUtils.logGGQ("收到消息:${it1}")
-                            val taskEntity:TaskEntity = Gson().fromJson<TaskEntity>(it1.toString(),TaskEntity::class.java)
+                            val taskEntity: TaskEntity = Gson().fromJson<TaskEntity>(it1.toString(),
+                                TaskEntity::class.java)
                             listener?.let { it2 -> it2.call(taskEntity) }?:let {  LogUtils.logGGQ("listener is null") }
                         }?:let {
                             LogUtils.logGGQ("arg is null")

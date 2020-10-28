@@ -5,26 +5,21 @@ import android.text.TextUtils
 import android.view.accessibility.AccessibilityManager
 import cn.vove7.andro_accessibility_api.AccessibilityApi
 import cn.vove7.andro_accessibility_api.AppScope
-import cn.vove7.andro_accessibility_api.api.withId
-import cn.vove7.andro_accessibility_api.api.withText
 import com.birbit.android.jobqueue.Job
 import com.birbit.android.jobqueue.callback.JobManagerCallback
-import com.pinduo.auto.app.global.Constants
-import com.pinduo.auto.http.entity.TaskEntity
-import com.pinduo.auto.im.OnSocketListener
-import com.pinduo.auto.im.SocketClient
-import com.pinduo.auto.widget.observers.ObserverManager
-import com.pinduo.auto.widget.timer.MyScheduledExecutor
-import com.pinduo.auto.widget.timer.TimerTickListener
+import com.pinduo.autodemo.widget.observers.ObserverManager
+import com.pinduo.autodemo.widget.timer.MyScheduledExecutor
+import com.pinduo.autodemo.widget.timer.TimerTickListener
 import com.pinduo.autodemo.app.MyApplication
+import com.pinduo.autodemo.app.global.Constants
 import com.pinduo.autodemo.core.CommonAccessbility
 import com.pinduo.autodemo.core.LivePlayAccessibility
+import com.pinduo.autodemo.http.entity.TaskEntity
+import com.pinduo.autodemo.im.OnSocketListener
+import com.pinduo.autodemo.im.SocketClient
 import com.pinduo.autodemo.utils.LogUtils
-import com.pinduo.autodemo.utils.TaskUtils
 import com.pinduo.autodemo.widget.job.TaskJob
 import com.yhao.floatwindow.FloatWindow
-import okhttp3.internal.concurrent.TaskQueue
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -70,6 +65,10 @@ class MyAccessibilityService :AccessibilityApi(){
         super.onCreate()
         //must 高级无障碍
         AccessibilityApi.gestureService = this
+
+        for (index in 0..30){
+            haList.add(index.toString())
+        }
 
         CommonAccessbility.INSTANCE.initService(this)
         LivePlayAccessibility.INSTANCE.initService(this)
@@ -193,7 +192,7 @@ class MyAccessibilityService :AccessibilityApi(){
         })
     }
 
-    private val haList = listOf<String>("1","2","3","4","5","6","7","8","9","10")
+    private val haList = mutableListOf<String>()
 
 
     private fun stopTask(isNormal:Boolean = true) {

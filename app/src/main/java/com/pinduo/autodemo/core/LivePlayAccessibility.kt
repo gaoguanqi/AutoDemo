@@ -3,18 +3,15 @@ package com.pinduo.autodemo.core
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.net.Uri
-import android.os.SystemClock
 import android.text.TextUtils
 import cn.vove7.andro_accessibility_api.api.*
-import cn.vove7.andro_accessibility_api.utils.whileWaitTime
-import com.pinduo.auto.app.global.Constants
-import com.pinduo.auto.im.SocketClient
-import com.pinduo.auto.utils.WaitUtil
-import com.pinduo.auto.widget.observers.ObserverListener
-import com.pinduo.auto.widget.observers.ObserverManager
+import com.pinduo.autodemo.app.global.Constants
+import com.pinduo.autodemo.im.SocketClient
+import com.pinduo.autodemo.utils.WaitUtil
+import com.pinduo.autodemo.widget.observers.ObserverListener
+import com.pinduo.autodemo.widget.observers.ObserverManager
 import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.utils.LogUtils
-import okhttp3.internal.wait
 
 class LivePlayAccessibility private constructor() : BaseAccessbility(), ObserverListener {
 
@@ -45,9 +42,9 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
 
     }
 
-    private var socketClient:SocketClient? = null
-    fun getSocketClient():SocketClient? = socketClient
-    fun setSocketClient(socket:SocketClient){
+    private var socketClient: SocketClient? = null
+    fun getSocketClient(): SocketClient? = socketClient
+    fun setSocketClient(socket: SocketClient){
         this.socketClient = socket
     }
 
@@ -96,23 +93,23 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
                         }?:let {
                             //
 //                            back()
-                            MyApplication.instance.getUiHandler().sendMessage("评论失败1")
+                            MyApplication.instance.getUiHandler().sendMessage("评论失败1->${content}")
                             getSocketClient()?.sendError()
                         }
                     }
                 }?:let {
 //                    back()
-                    MyApplication.instance.getUiHandler().sendMessage("评论失败2")
+                    MyApplication.instance.getUiHandler().sendMessage("评论失败2->${content}")
                     getSocketClient()?.sendError()
                 }
             }else{
                 //点击该节点失败
-                MyApplication.instance.getUiHandler().sendMessage("评论失败3")
+                MyApplication.instance.getUiHandler().sendMessage("评论失败3->${content}")
                 getSocketClient()?.sendError()
             }
         }?:let {
             // 3秒之内未找到该节点
-            MyApplication.instance.getUiHandler().sendMessage("评论失败4")
+            MyApplication.instance.getUiHandler().sendMessage("评论失败4->${content}")
             getSocketClient()?.sendError()
         }
     }

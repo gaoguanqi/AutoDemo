@@ -1,6 +1,6 @@
-package com.pinduo.auto.im
+package com.pinduo.autodemo.im
 
-import com.pinduo.auto.http.entity.TaskEntity
+import com.pinduo.autodemo.http.entity.TaskEntity
 
 
 interface OnSocketListener {

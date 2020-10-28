@@ -1,4 +1,4 @@
-package com.pinduo.auto.utils
+package com.pinduo.autodemo.utils
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking

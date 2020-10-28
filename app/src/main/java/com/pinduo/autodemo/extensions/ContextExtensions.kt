@@ -1,4 +1,4 @@
-package com.pinduo.auto.extensions
+package com.pinduo.autodemo.extensions
 
 import android.content.Context
 import android.view.LayoutInflater

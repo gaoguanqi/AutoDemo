@@ -1,5 +1,5 @@
-package com.pinduo.auto.widget.observers
+package com.pinduo.autodemo.widget.observers
 
 interface ObserverListener {
-    fun observer(content:String)
+    fun observer(content: String)
 }

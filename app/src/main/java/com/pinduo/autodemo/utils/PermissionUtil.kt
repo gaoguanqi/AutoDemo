@@ -1,4 +1,4 @@
-package com.pinduo.auto.utils
+package com.pinduo.autodemo.utils
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -69,7 +69,7 @@ class PermissionUtil {
         /**
          * 请求位置
          */
-        fun applyLocation(requestPermission:RequestPermission,rxPermissions:RxPermissions ){
+        fun applyLocation(requestPermission: RequestPermission, rxPermissions:RxPermissions ){
             requestPermission(requestPermission,
                 rxPermissions,
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -80,7 +80,7 @@ class PermissionUtil {
         /**
          * 请求摄像头权限
          */
-        fun applyCamera(requestPermission:RequestPermission,rxPermissions:RxPermissions ){
+        fun applyCamera(requestPermission: RequestPermission, rxPermissions:RxPermissions ){
             requestPermission(requestPermission,
                 rxPermissions,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -90,7 +90,7 @@ class PermissionUtil {
         /**
          * 请求外部存储的权限
          */
-        fun applyExternalStorage(requestPermission:RequestPermission,rxPermissions:RxPermissions ){
+        fun applyExternalStorage(requestPermission: RequestPermission, rxPermissions:RxPermissions ){
             requestPermission(requestPermission,
                 rxPermissions,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -99,7 +99,7 @@ class PermissionUtil {
         /**
          * 请求发送短信权限
          */
-        fun applySendSms(requestPermission:RequestPermission,rxPermissions:RxPermissions ){
+        fun applySendSms(requestPermission: RequestPermission, rxPermissions:RxPermissions ){
             requestPermission(requestPermission,
                 rxPermissions,
                 Manifest.permission.SEND_SMS)
@@ -107,7 +107,7 @@ class PermissionUtil {
         /**
          * 请求打电话权限
          */
-        fun applyCallPhone(requestPermission:RequestPermission,rxPermissions:RxPermissions ){
+        fun applyCallPhone(requestPermission: RequestPermission, rxPermissions:RxPermissions ){
             requestPermission(requestPermission,
                 rxPermissions,
                 Manifest.permission.CALL_PHONE)
@@ -116,13 +116,13 @@ class PermissionUtil {
         /**
          * 请求获取手机状态的权限
          */
-        fun applyPhonestate(requestPermission:RequestPermission,rxPermissions:RxPermissions ){
+        fun applyPhonestate(requestPermission: RequestPermission, rxPermissions:RxPermissions ){
             requestPermission(requestPermission,
                 rxPermissions,
                 Manifest.permission.READ_PHONE_STATE)
         }
 
-        fun applyPermissions(requestPermission:RequestPermission,rxPermissions:RxPermissions ){
+        fun applyPermissions(requestPermission: RequestPermission, rxPermissions:RxPermissions ){
             requestPermission(requestPermission,
                 rxPermissions,
                 Manifest.permission.READ_PHONE_STATE,   //手机状态

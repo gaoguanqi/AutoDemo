@@ -5,8 +5,6 @@ import com.birbit.android.jobqueue.CancelReason
 import com.birbit.android.jobqueue.Job
 import com.birbit.android.jobqueue.Params
 import com.birbit.android.jobqueue.RetryConstraint
-import com.blankj.utilcode.util.ToastUtils
-import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.core.LivePlayAccessibility
 import com.pinduo.autodemo.utils.LogUtils
 

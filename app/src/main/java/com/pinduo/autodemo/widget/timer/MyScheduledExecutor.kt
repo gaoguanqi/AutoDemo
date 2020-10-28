@@ -1,4 +1,4 @@
-package com.pinduo.auto.widget.timer
+package com.pinduo.autodemo.widget.timer
 
 
 class MyScheduledExecutor private constructor(): Runnable {
@@ -8,7 +8,7 @@ class MyScheduledExecutor private constructor(): Runnable {
     private var isRing:Boolean = false
     private var name:String = ""
     private var job:String = ""
-    private var tickListener:TimerTickListener? = null
+    private var tickListener: TimerTickListener? = null
 
     companion object {
         val INSTANCE: MyScheduledExecutor by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED){

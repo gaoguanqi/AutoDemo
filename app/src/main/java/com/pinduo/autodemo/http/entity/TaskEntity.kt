@@ -1,4 +1,4 @@
-package com.pinduo.auto.http.entity
+package com.pinduo.autodemo.http.entity
 
 data class TaskEntity(val code:Int = 0,
                       val status:Int = 0,

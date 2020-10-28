@@ -1,4 +1,4 @@
-package com.pinduo.auto.app.config
+package com.pinduo.autodemo.app.config
 
 class Config {
     companion object{

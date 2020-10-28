@@ -3,13 +3,9 @@ package com.pinduo.autodemo
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
-import com.blankj.utilcode.util.FileIOUtils
-import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.pinduo.auto.app.global.Constants
-import com.pinduo.auto.utils.PermissionUtil
-import com.pinduo.auto.utils.RequestPermission
+import com.pinduo.autodemo.utils.PermissionUtil
+import com.pinduo.autodemo.utils.RequestPermission
 import com.pinduo.autodemo.ui.HomeActivity
 import com.pinduo.autodemo.ui.TestActivity
 import com.pinduo.autodemo.utils.IMEIUtils

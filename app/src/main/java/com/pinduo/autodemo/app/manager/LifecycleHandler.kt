@@ -1,4 +1,4 @@
-package com.pinduo.auto.app.manager
+package com.pinduo.autodemo.app.manager
 
 import android.os.Handler
 import androidx.lifecycle.Lifecycle

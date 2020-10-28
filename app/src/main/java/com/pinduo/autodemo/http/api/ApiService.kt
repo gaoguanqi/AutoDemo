@@ -1,6 +1,6 @@
-package com.pinduo.auto.http.api
+package com.pinduo.autodemo.http.api
 
-import com.pinduo.auto.app.config.Config
+import com.pinduo.autodemo.app.config.Config
 
 
 class ApiService {
