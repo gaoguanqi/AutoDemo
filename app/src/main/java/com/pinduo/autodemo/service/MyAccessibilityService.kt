@@ -65,18 +65,12 @@ class MyAccessibilityService :AccessibilityApi(){
         baseService = this
         super.onCreate()
         //must 高级无障碍
-        AccessibilityApi.gestureService = this
+        gestureService = this
 
 //        for (index in 0..30){
 //            haList.add(index.toString())
 //        }
 
-        haList.add("我来了")
-        haList.add("点赞")
-        haList.add("哈哈哈")
-        haList.add("呵呵呵")
-        haList.add("嗯")
-        haList.add("太好了")
 
         CommonAccessbility.INSTANCE.initService(this)
         LivePlayAccessibility.INSTANCE.initService(this)
@@ -187,10 +181,8 @@ class MyAccessibilityService :AccessibilityApi(){
                         }
 
                         Constants.Task.task4 -> {
-                            haList.forEach {
-                                MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task,content = it))){
-                                    //回调
-                                }
+                            MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task,content = entity.fayan))){
+                                //回调
                             }
                         }
 
@@ -200,6 +192,12 @@ class MyAccessibilityService :AccessibilityApi(){
                                 MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task,zxTime = (zxTime.toLong() * 1000L)))){
                                     //回调
                                 }
+                            }
+                        }
+
+                        Constants.Task.task9 ->{
+                            MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task))){
+                                //回调
                             }
                         }
                     }
@@ -244,6 +242,6 @@ class MyAccessibilityService :AccessibilityApi(){
         baseService = null
         super.onDestroy()
         //must 高级无障碍
-        AccessibilityApi.gestureService = null
+        gestureService = null
     }
 }

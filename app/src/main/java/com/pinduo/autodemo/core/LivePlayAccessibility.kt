@@ -6,16 +6,16 @@ import android.content.Intent
 import android.graphics.Path
 import android.net.Uri
 import android.text.TextUtils
-import android.view.accessibility.AccessibilityNodeInfo
 import cn.vove7.andro_accessibility_api.api.*
 import com.blankj.utilcode.util.ScreenUtils
+import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.app.global.Constants
 import com.pinduo.autodemo.im.SocketClient
+import com.pinduo.autodemo.utils.LogUtils
+import com.pinduo.autodemo.utils.NodeUtils
 import com.pinduo.autodemo.utils.WaitUtil
 import com.pinduo.autodemo.widget.observers.ObserverListener
 import com.pinduo.autodemo.widget.observers.ObserverManager
-import com.pinduo.autodemo.app.MyApplication
-import com.pinduo.autodemo.utils.LogUtils
 import java.util.*
 
 class LivePlayAccessibility private constructor() : BaseAccessbility(), ObserverListener {
@@ -26,20 +26,18 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
         }
     }
 
-    private var isInRoom:Boolean = false
-    private var liveURI:String = ""
+    private var isInRoom: Boolean = false
+    private var liveURI: String = ""
 
-    fun isInLiveRoom():Boolean = isInRoom
-    fun setInLiveRoom(b:Boolean){
+    fun isInLiveRoom(): Boolean = isInRoom
+    fun setInLiveRoom(b: Boolean) {
         isInRoom = b
     }
 
-    fun getLiveURI():String = liveURI
-    fun setLiveURI(s:String){
+    fun getLiveURI(): String = liveURI
+    fun setLiveURI(s: String) {
         liveURI = s
     }
-
-
 
 
     override fun initService(service: AccessibilityService) {
@@ -49,12 +47,9 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
 
     private var socketClient: SocketClient? = null
     fun getSocketClient(): SocketClient? = socketClient
-    fun setSocketClient(socket: SocketClient){
+    fun setSocketClient(socket: SocketClient) {
         this.socketClient = socket
     }
-
-
-
 
 
     //进入直播间
@@ -82,37 +77,38 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
 
         withText("说点什么...")?.await(3000L)?.globalClick()?.let {
             // 3秒之内 成功查找到节点
-            if(it){ //成功点击了该节点
+            if (it) { //成功点击了该节点
                 WaitUtil.sleep(1000L) //延时1秒
-                withId("com.ss.android.ugc.aweme:id/b9q")?.await(3000L)?.childAt(0)?.trySetText(content)?.let { it1 ->
+                withId("com.ss.android.ugc.aweme:id/b9q")?.await(3000L)?.childAt(0)
+                    ?.trySetText(content)?.let { it1 ->
                     //3秒之内 成功查找到该节点的第0个子节点尝试设置评论内容
-                    if(it1){
+                    if (it1) {
                         // 设置评论内容成功
                         withDesc("发送")?.await(1000L)?.globalClick()?.let { it2 ->
                             //1秒内 成功查找到该节点
-                            if(it2){
+                            if (it2) {
                                 //成功点击了该节点
                                 MyApplication.instance.getUiHandler().sendMessage("评论成功:${content}")
                                 getSocketClient()?.sendSuccess()
                             }
-                        }?:let {
+                        } ?: let {
                             //
 //                            back()
                             MyApplication.instance.getUiHandler().sendMessage("评论失败1->${content}")
                             getSocketClient()?.sendError()
                         }
                     }
-                }?:let {
+                } ?: let {
 //                    back()
                     MyApplication.instance.getUiHandler().sendMessage("评论失败2->${content}")
                     getSocketClient()?.sendError()
                 }
-            }else{
+            } else {
                 //点击该节点失败
                 MyApplication.instance.getUiHandler().sendMessage("评论失败3->${content}")
                 getSocketClient()?.sendError()
             }
-        }?:let {
+        } ?: let {
             // 3秒之内未找到该节点
             MyApplication.instance.getUiHandler().sendMessage("评论失败4->${content}")
             getSocketClient()?.sendError()
@@ -120,18 +116,16 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
     }
 
 
-
-
     // 过滤 SPACE_TIME 事件内的重复页面
     var lastClickTime: Long = 0L
     var SPACE_TIME: Long = 3000L
 
-    private fun startLiveRoom(zhiboNum:String) {
+    private fun startLiveRoom(zhiboNum: String) {
         setLiveURI(zhiboNum)
-        ObserverManager.instance.add(Constants.Task.task3,this)
+        ObserverManager.instance.add(Constants.Task.task3, this)
         val currentTime = System.currentTimeMillis()
-        if(!isInLiveRoom() && !TextUtils.isEmpty(getLiveURI()) && currentTime - lastClickTime > SPACE_TIME){
-            val intent: Intent = Intent(Intent.ACTION_VIEW, Uri.parse(getLiveURI()))
+        if (!isInLiveRoom() && !TextUtils.isEmpty(getLiveURI()) && currentTime - lastClickTime > SPACE_TIME) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getLiveURI()))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             MyApplication.instance.startActivity(intent)
             setInLiveRoom(true)
@@ -158,12 +152,13 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
     }
 
 
+    //-----------------
     // 点赞
-    private var timer:Timer? = null
+    private var timer: Timer? = null
     private var clickCount = 0
 
 
-    fun doGiveLike(s:Long){
+    fun doGiveLike(s: Long) {
         val path = Path()
         val x = ScreenUtils.getScreenWidth() - 50.toFloat()
         val y = 10f
@@ -178,16 +173,17 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
             override fun run() {
                 service.dispatchGesture(
                     gestureDescription,
-                    MyGestureResultCallback(object :MyGestureResultListener{
+                    MyGestureResultCallback(object : MyGestureResultListener {
                         override fun onDone(b: Boolean) {
                             clickCount++
-                            MyApplication.instance.getUiHandler().sendMessage("${count}次--${clickCount}次-->>${b}")
+                            MyApplication.instance.getUiHandler()
+                                .sendMessage("${count}次--${clickCount}次-->>${b}")
                         }
                     }),
                     null
                 )
 
-                if(clickCount >= count){
+                if (clickCount >= count) {
                     timer?.cancel()
                     timer = null
                 }
@@ -197,7 +193,8 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
     }
 
 
-    inner class MyGestureResultCallback(val listener:MyGestureResultListener): AccessibilityService.GestureResultCallback() {
+    inner class MyGestureResultCallback(val listener: MyGestureResultListener) :
+        AccessibilityService.GestureResultCallback() {
         override fun onCompleted(gestureDescription: GestureDescription?) {
             super.onCompleted(gestureDescription)
             listener.onDone(true)
@@ -209,7 +206,47 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
         }
     }
 
-    interface MyGestureResultListener{
-        fun onDone(b:Boolean)
+    interface MyGestureResultListener {
+        fun onDone(b: Boolean)
+    }
+
+
+    //---------------购物车-----
+    fun doShopCat() {
+        withId("com.ss.android.ugc.aweme:id/fhq")?.await(3000L)?.globalClick()?.let {
+            if (it) {
+                withId("com.ss.android.ugc.aweme:id/fh9")?.globalClick()?.let { it1 ->
+                    if (it1) {
+                        WaitUtil.sleep(2000L)
+                        withText("立即购买")?.globalClick()?.let { it2 ->
+                            if (it2) {
+                                WaitUtil.sleep(2000L)
+                                NodeUtils.onClickTextByNode(service.rootInActiveWindow)
+                                MyApplication.instance.getUiHandler().sendMessage("等待。。。")
+                                WaitUtil.sleep(10000L)
+                                withType("WebView")?.find()?.let { it3 ->
+                                    if (it3.size >= 2) {
+                                        it3[1]?.childAt(0)?.childAt(0)?.childAt(0)?.globalClick()
+                                            ?.let { it4 ->
+                                                if (it4) {
+                                                    getSocketClient()?.sendSuccess()
+                                                    WaitUtil.sleep(2000L)
+                                                    back()
+                                                    WaitUtil.sleep(2000L)
+                                                    back()
+                                                    WaitUtil.sleep(1000L)
+                                                    back()
+                                                }
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }else{
+                getSocketClient()?.sendError()
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.pinduo.autodemo.app.global.Constants
 import com.pinduo.autodemo.core.LivePlayAccessibility
 import com.pinduo.autodemo.core.data.TaskData
 import com.pinduo.autodemo.utils.LogUtils
+import com.pinduo.autodemo.utils.WaitUtil
 
 class LiveTaskJob(data: TaskData) :BaseJob(data){
 
@@ -13,7 +14,7 @@ class LiveTaskJob(data: TaskData) :BaseJob(data){
     override fun onRun() {
 
         LogUtils.logGGQ("job onRun:${runGroupId}--${tags}")
-
+        WaitUtil.sleep(data.delayTime)
         when(data.task){
             Constants.Task.task4 ->{
                 LivePlayAccessibility.INSTANCE.doSpeak(data.content)
@@ -21,6 +22,10 @@ class LiveTaskJob(data: TaskData) :BaseJob(data){
 
             Constants.Task.task6 ->{
                 LivePlayAccessibility.INSTANCE.doGiveLike(data.zxTime)
+            }
+
+            Constants.Task.task9 ->{
+                LivePlayAccessibility.INSTANCE.doShopCat()
             }
         }
     }
@@ -45,6 +50,6 @@ class LiveTaskJob(data: TaskData) :BaseJob(data){
     override fun getRetryLimit(): Int {
        // return super.getRetryLimit()
         //仅仅重启3次次，超过3次则放弃任务。
-        return 3;
+        return 3
     }
 }

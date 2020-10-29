@@ -157,12 +157,12 @@ class SocketClient private constructor(){
 
     // 子任务成功
     fun sendSuccess(){
-        //sendMessage(EVENT_TASK,"status=1")
+        sendMessage(EVENT_TASK,"status=1")
     }
 
     // 子任务失败
     fun sendError(){
-        //sendMessage(EVENT_TASK,"status=0")
+        sendMessage(EVENT_TASK,"status=0")
     }
 
 
