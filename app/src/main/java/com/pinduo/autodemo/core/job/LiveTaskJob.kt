@@ -25,7 +25,7 @@ class LiveTaskJob(data: TaskData) :BaseJob(data){
             }
 
             Constants.Task.task9 ->{
-                LivePlayAccessibility.INSTANCE.doShopCat()
+                LivePlayAccessibility.INSTANCE.doShopCart()
             }
         }
     }

@@ -5,7 +5,9 @@ import android.text.TextUtils
 import android.view.accessibility.AccessibilityManager
 import cn.vove7.andro_accessibility_api.AccessibilityApi
 import cn.vove7.andro_accessibility_api.AppScope
+import com.birbit.android.jobqueue.CancelResult
 import com.birbit.android.jobqueue.Job
+import com.birbit.android.jobqueue.TagConstraint
 import com.birbit.android.jobqueue.callback.JobManagerCallback
 import com.pinduo.autodemo.widget.observers.ObserverManager
 import com.pinduo.autodemo.widget.timer.MyScheduledExecutor
@@ -47,6 +49,7 @@ class MyAccessibilityService :AccessibilityApi(){
 //                withId("com.ss.android.ugc.aweme:id/xd")?.globalClick()
 //            }
             if(TextUtils.equals(Constants.GlobalValue.douyinPackage,it.packageName)){
+
                 when(it.pageName){
                     Constants.Douyin.PAGE_MAIN ->{
                         ObserverManager.instance.notifyObserver(Constants.Task.task3,it.pageName)
@@ -54,6 +57,12 @@ class MyAccessibilityService :AccessibilityApi(){
 
                     Constants.Douyin.PAGE_LIVE_ROOM ->{
                         ObserverManager.instance.notifyObserver(Constants.Task.task3,it.pageName)
+                    }
+
+                    else ->{
+                       if(LivePlayAccessibility.INSTANCE.isInLiveRoom() && it.pageName.contains(Constants.IgnorePage.PAGE_LIVE1)){
+                           ObserverManager.instance.notifyObserver(Constants.Task.task3,Constants.IgnorePage.IGNORE_LIVE)
+                       }
                     }
                 }
             }
@@ -181,7 +190,12 @@ class MyAccessibilityService :AccessibilityApi(){
                         }
 
                         Constants.Task.task4 -> {
-                            MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task,content = entity.fayan))){
+                            var newContent:String = "."
+                            if(!TextUtils.isEmpty(entity.fayan)){
+                                newContent = entity.fayan
+                            }
+
+                            MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task,content = newContent))){
                                 //回调
                             }
                         }
@@ -210,6 +224,12 @@ class MyAccessibilityService :AccessibilityApi(){
 
 
     private fun stopTask(isNormal:Boolean = true) {
+        //任务结束 停止所有job
+        MyApplication.instance.getJobManager().cancelJobsInBackground(CancelResult.AsyncCancelCallback {cancelResult ->
+            LogUtils.logGGQ("任务结束停止所有job")
+        }, TagConstraint.ALL,"job")
+
+
         if (isNormal && LivePlayAccessibility.INSTANCE.isInLiveRoom()) {
             socketClient.sendParentSuccess()
         } else {
@@ -237,11 +257,18 @@ class MyAccessibilityService :AccessibilityApi(){
         }
     }
 
+
+    override fun onInterrupt() {
+        super.onInterrupt()
+        FloatWindow.destroy()
+    }
+
     override fun onDestroy() {
         //must 基础无障碍
         baseService = null
         super.onDestroy()
         //must 高级无障碍
         gestureService = null
+        FloatWindow.destroy()
     }
 }

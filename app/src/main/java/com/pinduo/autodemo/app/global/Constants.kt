@@ -49,5 +49,15 @@ class Constants {
     object Douyin {
         const val PAGE_MAIN = "com.ss.android.ugc.aweme.main.MainActivity"
         const val PAGE_LIVE_ROOM = "com.ss.android.ugc.aweme.live.LivePlayActivity"
+        //直播间购物车
+        const val PAGE_LIVE_CART = "com.bytedance.android.livesdk.livecommerce.dialog.ECBottomDialog"
+        //评论
+        const val PAGE_LIVE_INPUT = "android.app.Dialog"
+    }
+
+    object IgnorePage{
+        const val IGNORE_LIVE = "IgnoreLive"
+        const val PAGE_LIVE1 = "com.bytedance.android.livesdk"
+
     }
 }

@@ -20,6 +20,9 @@ import java.util.*
 
 class LivePlayAccessibility private constructor() : BaseAccessbility(), ObserverListener {
 
+    //com.bytedance.android.livesdk.chatroom.viewmodule.FollowGuideWidget$a
+    //com.bytedance.android.livesdk.widget.LiveBottomSheetDialog
+
     companion object {
         val INSTANCE: LivePlayAccessibility by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             LivePlayAccessibility()
@@ -33,6 +36,7 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
     fun setInLiveRoom(b: Boolean) {
         isInRoom = b
     }
+
 
     fun getLiveURI(): String = liveURI
     fun setLiveURI(s: String) {
@@ -74,7 +78,6 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
 //                }
 //            }
 //        }
-
         withText("说点什么...")?.await(3000L)?.globalClick()?.let {
             // 3秒之内 成功查找到节点
             if (it) { //成功点击了该节点
@@ -116,15 +119,11 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
     }
 
 
-    // 过滤 SPACE_TIME 事件内的重复页面
-    var lastClickTime: Long = 0L
-    var SPACE_TIME: Long = 3000L
 
     private fun startLiveRoom(zhiboNum: String) {
         setLiveURI(zhiboNum)
         ObserverManager.instance.add(Constants.Task.task3, this)
-        val currentTime = System.currentTimeMillis()
-        if (!isInLiveRoom() && !TextUtils.isEmpty(getLiveURI()) && currentTime - lastClickTime > SPACE_TIME) {
+        if (!isInLiveRoom() && !TextUtils.isEmpty(getLiveURI())) {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getLiveURI()))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             MyApplication.instance.startActivity(intent)
@@ -148,7 +147,19 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
                 MyApplication.instance.getUiHandler().sendMessage("进入直播间")
                 setInLiveRoom(true)
             }
+
+            Constants.IgnorePage.IGNORE_LIVE ->{
+                //被遮挡点击操作
+                MyApplication.instance.getUiHandler().sendMessage("被遮挡")
+                LogUtils.logGGQ("被遮挡...")
+                val x = ScreenUtils.getScreenWidth()/2
+                val y = ScreenUtils.getScreenHeight()/2
+                val isClick:Boolean = click(x,y)
+                LogUtils.logGGQ(if(isClick)"点击" else "未点击")
+            }
         }
+
+
     }
 
 
@@ -212,8 +223,8 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
 
 
     //---------------购物车-----
-    fun doShopCat() {
-        withId("com.ss.android.ugc.aweme:id/fhq")?.await(3000L)?.globalClick()?.let {
+    fun doShopCart() {
+        withId("com.ss.android.ugc.aweme:id/fhq")?.globalClick()?.let {
             if (it) {
                 withId("com.ss.android.ugc.aweme:id/fh9")?.globalClick()?.let { it1 ->
                     if (it1) {
