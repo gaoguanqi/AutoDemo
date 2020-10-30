@@ -13,6 +13,7 @@ import com.pinduo.autodemo.app.global.Constants
 import com.pinduo.autodemo.im.SocketClient
 import com.pinduo.autodemo.utils.LogUtils
 import com.pinduo.autodemo.utils.NodeUtils
+import com.pinduo.autodemo.utils.TaskUtils
 import com.pinduo.autodemo.utils.WaitUtil
 import com.pinduo.autodemo.widget.observers.ObserverListener
 import com.pinduo.autodemo.widget.observers.ObserverManager
@@ -84,7 +85,11 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
             // 3秒之内 成功查找到节点
             if (it) { //成功点击了该节点
                 WaitUtil.sleep(1000L) //延时1秒
-                withId("com.ss.android.ugc.aweme:id/b9q")?.await(3000L)?.childAt(0)
+                var b9q = "com.ss.android.ugc.aweme:id/b9q"
+                if(!TaskUtils.isDouyin1270()){
+                    b9q = "com.ss.android.ugc.aweme:id/b40"
+                }
+                withId(b9q)?.await(3000L)?.childAt(0)
                     ?.trySetText(content)?.let { it1 ->
                     //3秒之内 成功查找到该节点的第0个子节点尝试设置评论内容
                     if (it1) {
@@ -201,9 +206,19 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
     fun doShopCart() {
         isSuccess = false
         try {
-            withId("com.ss.android.ugc.aweme:id/fhq")?.globalClick()?.let {
+
+            var fhq = "com.ss.android.ugc.aweme:id/fhq"
+            if(!TaskUtils.isDouyin1270()){
+                fhq = "com.ss.android.ugc.aweme:id/f3t"
+            }
+
+            withId(fhq)?.globalClick()?.let {
                 if (it) {
-                    withId("com.ss.android.ugc.aweme:id/fh9")?.globalClick()?.let { it1 ->
+                    var fh9 = "com.ss.android.ugc.aweme:id/fh9"
+                    if(!TaskUtils.isDouyin1270()){
+                        fh9 = "com.ss.android.ugc.aweme:id/f3b"
+                    }
+                    withId(fh9)?.globalClick()?.let { it1 ->
                         if (it1) {
                             WaitUtil.sleep(2000L)
                             withText("立即购买")?.globalClick()?.let { it2 ->

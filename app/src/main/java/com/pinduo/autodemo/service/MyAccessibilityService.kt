@@ -182,12 +182,7 @@ class MyAccessibilityService :AccessibilityApi(){
                         }
 
                         Constants.Task.task4 -> {
-                            var newContent:String = "."
-                            if(!TextUtils.isEmpty(entity.fayan)){
-                                newContent = entity.fayan
-                            }
-
-                            MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task,content = newContent))){
+                            MyApplication.instance.getJobManager().addJobInBackground(LiveTaskJob(TaskData(task = task,content = entity.fayan))){
                                 //回调
                             }
                         }

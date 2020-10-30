@@ -14,7 +14,8 @@ class LiveTaskJob(data: TaskData) :BaseJob(data){
     override fun onRun() {
 
         LogUtils.logGGQ("job onRun:${runGroupId}--${tags}")
-        WaitUtil.sleep(data.delayTime)
+        LogUtils.logGGQ("data:${data.content}")
+
         when(data.task){
             Constants.Task.task4 ->{
                 LivePlayAccessibility.INSTANCE.doSpeak(data.content)
@@ -50,6 +51,6 @@ class LiveTaskJob(data: TaskData) :BaseJob(data){
     override fun getRetryLimit(): Int {
        // return super.getRetryLimit()
         //仅仅重启3次次，超过3次则放弃任务。
-        return 3
+        return 0
     }
 }
