@@ -29,11 +29,13 @@ class ObserverManager : SubjectListener {
 //            }
 //        }
 
-        list.forEach {
-            it.observer(content)
+        try {
+            list.forEach {
+                it.observer(content)
+            }
+        }catch (e:ConcurrentModificationException){
+            e.printStackTrace()
         }
-
-
     }
 
     override fun remove() {

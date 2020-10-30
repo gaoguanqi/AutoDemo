@@ -6,11 +6,13 @@ import android.content.Intent
 import android.graphics.Path
 import android.net.Uri
 import android.text.TextUtils
+import cn.vove7.andro_accessibility_api.AccessibilityApi
 import cn.vove7.andro_accessibility_api.api.*
 import com.blankj.utilcode.util.ScreenUtils
 import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.app.global.Constants
 import com.pinduo.autodemo.im.SocketClient
+import com.pinduo.autodemo.service.MyAccessibilityService
 import com.pinduo.autodemo.utils.LogUtils
 import com.pinduo.autodemo.utils.NodeUtils
 import com.pinduo.autodemo.utils.TaskUtils
@@ -84,7 +86,6 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
         withText("说点什么...")?.globalClick()?.let {
             // 3秒之内 成功查找到节点
             if (it) { //成功点击了该节点
-                WaitUtil.sleep(1000L) //延时1秒
                 var b9q = "com.ss.android.ugc.aweme:id/b9q"
                 if(!TaskUtils.isDouyin1270()){
                     b9q = "com.ss.android.ugc.aweme:id/b40"
@@ -94,22 +95,23 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
                     //3秒之内 成功查找到该节点的第0个子节点尝试设置评论内容
                     if (it1) {
                         // 设置评论内容成功
-                        withDesc("发送")?.globalClick()?.let { it2 ->
+                        var fvs = "com.ss.android.ugc.aweme:id/fvs"
+                        if(!TaskUtils.isDouyin1270()){
+                            fvs = "com.ss.android.ugc.aweme:id/fga"
+                        }
+//                        withDesc("发送")?.await(2000L)?.globalClick()?.let { it2 ->
+                        withId(fvs)?.await(3000L)?.globalClick()?.let { it2 ->
                             //1秒内 成功查找到该节点
                             if (it2) {
                                 //成功点击了该节点
                                 MyApplication.instance.getUiHandler().sendMessage("评论成功:${content}")
                                 getSocketClient()?.sendSuccess()
+                            }else{
+                                MyApplication.instance.getUiHandler().sendMessage("未点击发送")
                             }
-                        } ?: let {
-                            //
-//                            back()
-                            MyApplication.instance.getUiHandler().sendMessage("评论失败1->${content}")
-                            getSocketClient()?.sendError()
                         }
                     }
                 } ?: let {
-//                    back()
                     MyApplication.instance.getUiHandler().sendMessage("评论失败2->${content}")
                     getSocketClient()?.sendError()
                 }
@@ -127,14 +129,17 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
 
 
 
+
+
     private fun startLiveRoom(zhiboNum: String) {
         setLiveURI(zhiboNum)
         ObserverManager.instance.add(this)
         if (!isInLiveRoom() && !TextUtils.isEmpty(getLiveURI())) {
+            setInLiveRoom(true)
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getLiveURI()))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             MyApplication.instance.startActivity(intent)
-            setInLiveRoom(true)
+
             MyApplication.instance.getUiHandler().sendMessage("<<<直播间>>>")
         }
     }
@@ -184,8 +189,8 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
     fun doGiveLike(s:Long){
         val count = (s / period)
         try {
-            for (index in 0..count){
-                if(pressWithTime(x,y,delay)){
+            for (index in 1..count){
+                if(isInLiveRoom() && AccessibilityApi.isGestureServiceEnable && pressWithTime(x,y,delay)){
                     clickCount++
                 }
                 MyApplication.instance.getUiHandler().sendMessage("${count}-->>>${index}次-->${clickCount}次成功")

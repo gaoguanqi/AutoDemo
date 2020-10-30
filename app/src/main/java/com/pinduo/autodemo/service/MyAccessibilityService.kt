@@ -166,7 +166,11 @@ class MyAccessibilityService :AccessibilityApi(){
                 }
 
                 if(!TextUtils.isEmpty(message) && TextUtils.equals(message,"stop")){
-                    stopTask()
+                    when(task){
+                        Constants.Task.task3 ->{
+                            stopTask(true)
+                        }
+                    }
                     return
                 }
 
