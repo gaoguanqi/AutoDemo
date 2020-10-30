@@ -29,6 +29,9 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
         }
     }
 
+    //子任务是否执行成功
+    private var isSuccess:Boolean = false
+
     private var isInRoom: Boolean = false
     private var liveURI: String = ""
 
@@ -172,52 +175,73 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
     private val y = 10
     private val delay = 1
     private val period = 500
+    private var clickCount = 0
     fun doGiveLike(s:Long){
         val count = (s / period)
-        for (index in 0..count){
-            pressWithTime(x,y,delay)
-            MyApplication.instance.getUiHandler().sendMessage("${count}-->>>${index}次")
-            WaitUtil.sleep(500L)
+        try {
+            for (index in 0..count){
+                if(pressWithTime(x,y,delay)){
+                    clickCount++
+                }
+                MyApplication.instance.getUiHandler().sendMessage("${count}-->>>${index}次-->${clickCount}次成功")
+                WaitUtil.sleep(500L)
+            }
+        }finally {
+            if(clickCount >= count){
+                getSocketClient()?.sendSuccess()
+            }else{
+                getSocketClient()?.sendError()
+            }
         }
     }
 
 
     //---------------购物车-----
+
     fun doShopCart() {
-        withId("com.ss.android.ugc.aweme:id/fhq")?.globalClick()?.let {
-            if (it) {
-                withId("com.ss.android.ugc.aweme:id/fh9")?.globalClick()?.let { it1 ->
-                    if (it1) {
-                        WaitUtil.sleep(2000L)
-                        withText("立即购买")?.globalClick()?.let { it2 ->
-                            if (it2) {
-                                WaitUtil.sleep(2000L)
-                                NodeUtils.onClickTextByNode(service.rootInActiveWindow)
-                                MyApplication.instance.getUiHandler().sendMessage("等待。。。")
-                                WaitUtil.sleep(10000L)
-                                withType("WebView")?.find()?.let { it3 ->
-                                    if (it3.size >= 2) {
-                                        it3[1]?.childAt(0)?.childAt(0)?.childAt(0)?.globalClick()
-                                            ?.let { it4 ->
-                                                if (it4) {
-                                                    getSocketClient()?.sendSuccess()
-                                                    WaitUtil.sleep(2000L)
-                                                    back()
-                                                    WaitUtil.sleep(2000L)
-                                                    back()
-                                                    WaitUtil.sleep(1000L)
-                                                    back()
+        isSuccess = false
+        try {
+            withId("com.ss.android.ugc.aweme:id/fhq")?.globalClick()?.let {
+                if (it) {
+                    withId("com.ss.android.ugc.aweme:id/fh9")?.globalClick()?.let { it1 ->
+                        if (it1) {
+                            WaitUtil.sleep(2000L)
+                            withText("立即购买")?.globalClick()?.let { it2 ->
+                                if (it2) {
+                                    WaitUtil.sleep(2000L)
+                                    NodeUtils.onClickTextByNode(service.rootInActiveWindow)
+                                    MyApplication.instance.getUiHandler().sendMessage("等待。。。")
+                                    isSuccess = true
+                                    WaitUtil.sleep(10000L)
+                                    withType("WebView")?.find()?.let { it3 ->
+                                        if (it3.size >= 2) {
+                                            it3[1]?.childAt(0)?.childAt(0)?.childAt(0)?.globalClick()
+                                                ?.let { it4 ->
+                                                    if (it4) {
+                                                        WaitUtil.sleep(2000L)
+                                                        back()
+                                                        WaitUtil.sleep(2000L)
+                                                        back()
+                                                        WaitUtil.sleep(1000L)
+                                                        back()
+                                                    }
                                                 }
-                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }else{
+            }
+        }finally {
+            if(isSuccess){
+                getSocketClient()?.sendSuccess()
+            }else {
                 getSocketClient()?.sendError()
             }
         }
+
+
     }
 }

@@ -1,5 +1,7 @@
 package com.pinduo.autodemo.app.config
 
+import android.os.Environment
+
 class Config {
     companion object{
 //        const val BASE_URL:String = "http://pinduocm.com/"
@@ -13,6 +15,10 @@ class Config {
 
         const val SUCCESS_CODE:Int = 200
         const val REBIND_CODE:Int = 401
+
+
+
+
     }
 
 }

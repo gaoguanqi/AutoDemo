@@ -5,9 +5,7 @@ import android.os.Environment
 
 class Constants {
     object Path{
-        val path = Environment.getExternalStorageDirectory().path
-        val BASE_PATH:String = path + "/auto"
-        val IMEI_PATH = BASE_PATH +"/imei.txt"
+        val IMEI_PATH:String = Environment.getExternalStorageDirectory().toString() + "/android/imei.text"
     }
 
     object ApiParams{
