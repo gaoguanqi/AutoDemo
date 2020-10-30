@@ -49,7 +49,10 @@ class Constants {
         const val PAGE_MAIN = "com.ss.android.ugc.aweme.main.MainActivity"
         const val PAGE_LIVE_ROOM = "com.ss.android.ugc.aweme.live.LivePlayActivity"
         //主播头像弹出框
-        const val PAGE_LIVE_ANCHOR= "com.bytedance.android.livesdk.widget.LiveBottomSheetDialog"
+        const val PAGE_LIVE_ANCHOR = "com.bytedance.android.livesdk.widget.LiveBottomSheetDialog"
+        //
+        const val PAGE_LIVE_GIFT = "com.bytedance.android.livesdk.gift.c.a"
+        const val PAGE_LIVE_Follow = "com.bytedance.android.livesdk.chatroom.viewmodule.FollowGuideWidget${'$'}a"
 
         //直播间购物车
         const val PAGE_LIVE_CART = "com.bytedance.android.livesdk.livecommerce.dialog.ECBottomDialog"

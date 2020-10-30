@@ -147,7 +147,9 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
                 setInLiveRoom(true)
             }
 
-            Constants.Douyin.PAGE_LIVE_ANCHOR ->{
+            Constants.Douyin.PAGE_LIVE_ANCHOR,
+            Constants.Douyin.PAGE_LIVE_GIFT,
+            Constants.Douyin.PAGE_LIVE_Follow ->{
                 if(isInLiveRoom()) {
                     //被遮挡点击操作
                     MyApplication.instance.getUiHandler().sendMessage("被遮挡")
@@ -166,60 +168,17 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
 
     //-----------------
     // 点赞
-    private var timer: Timer? = null
-    private var clickCount = 0
-
-
-    fun doGiveLike(s: Long) {
-        val path = Path()
-        val x = ScreenUtils.getScreenWidth() - 50.toFloat()
-        val y = 10f
-        val period = 500L
-        path.moveTo(x, y)
-        val count = (s / period).toInt()
-        val builder = GestureDescription.Builder()
-        val gestureDescription =
-            builder.addStroke(GestureDescription.StrokeDescription(path, 10L, 1L)).build()
-        timer = Timer()
-        val timerTask: TimerTask = object : TimerTask() {
-            override fun run() {
-                service.dispatchGesture(
-                    gestureDescription,
-                    MyGestureResultCallback(object : MyGestureResultListener {
-                        override fun onDone(b: Boolean) {
-                            clickCount++
-                            MyApplication.instance.getUiHandler()
-                                .sendMessage("${count}次--${clickCount}次-->>${b}")
-                        }
-                    }),
-                    null
-                )
-
-                if (clickCount >= count) {
-                    timer?.cancel()
-                    timer = null
-                }
-            }
+    private val x = ScreenUtils.getScreenWidth() - 50
+    private val y = 10
+    private val delay = 1
+    private val period = 500
+    fun doGiveLike(s:Long){
+        val count = (s / period)
+        for (index in 0..count){
+            pressWithTime(x,y,delay)
+            MyApplication.instance.getUiHandler().sendMessage("${count}-->>>${index}次")
+            WaitUtil.sleep(500L)
         }
-        timer?.schedule(timerTask, 0L, period) //立即
-    }
-
-
-    inner class MyGestureResultCallback(val listener: MyGestureResultListener) :
-        AccessibilityService.GestureResultCallback() {
-        override fun onCompleted(gestureDescription: GestureDescription?) {
-            super.onCompleted(gestureDescription)
-            listener.onDone(true)
-        }
-
-        override fun onCancelled(gestureDescription: GestureDescription?) {
-            super.onCancelled(gestureDescription)
-            listener.onDone(false)
-        }
-    }
-
-    interface MyGestureResultListener {
-        fun onDone(b: Boolean)
     }
 
 

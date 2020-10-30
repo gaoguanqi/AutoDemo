@@ -49,18 +49,12 @@ class MyAccessibilityService :AccessibilityApi(){
 //                withId("com.ss.android.ugc.aweme:id/xd")?.globalClick()
 //            }
             if(TextUtils.equals(Constants.GlobalValue.douyinPackage,it.packageName)){
-
                 when(it.pageName){
-                    Constants.Douyin.PAGE_MAIN ->{
-
-                        ObserverManager.instance.notifyObserver(it.pageName)
-                    }
-
-                    Constants.Douyin.PAGE_LIVE_ROOM ->{
-                        ObserverManager.instance.notifyObserver(it.pageName)
-                    }
-
-                    Constants.Douyin.PAGE_LIVE_ANCHOR ->{
+                    Constants.Douyin.PAGE_MAIN,
+                    Constants.Douyin.PAGE_LIVE_ROOM,
+                    Constants.Douyin.PAGE_LIVE_ANCHOR,
+                    Constants.Douyin.PAGE_LIVE_GIFT,
+                    Constants.Douyin.PAGE_LIVE_Follow ->{
                         ObserverManager.instance.notifyObserver(it.pageName)
                     }
                 }
