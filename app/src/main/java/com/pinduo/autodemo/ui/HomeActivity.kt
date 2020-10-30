@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.KeyEvent
-import com.pinduo.auto.base.BaseActivity
+import com.pinduo.autodemo.base.BaseActivity
 import com.pinduo.autodemo.R
 import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.utils.AccessibilityServiceUtils

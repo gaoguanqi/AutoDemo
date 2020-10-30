@@ -1,4 +1,4 @@
-package com.pinduo.auto.base
+package com.pinduo.autodemo.base
 
 import android.os.Bundle
 import android.text.TextUtils

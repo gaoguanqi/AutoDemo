@@ -1,7 +1,7 @@
 package com.pinduo.autodemo.ui
 
 import android.os.Bundle
-import com.pinduo.auto.base.BaseActivity
+import com.pinduo.autodemo.base.BaseActivity
 import com.pinduo.autodemo.R
 import com.pinduo.autodemo.app.MyApplication
 import com.pinduo.autodemo.core.job.TaskJob

@@ -1,4 +1,4 @@
-package com.pinduo.auto.error
+package com.pinduo.autodemo.error
 
 import java.lang.RuntimeException
 

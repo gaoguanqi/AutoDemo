@@ -10,7 +10,7 @@ import com.google.gson.Gson
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
-import com.pinduo.auto.base.BaseActivity
+import com.pinduo.autodemo.base.BaseActivity
 import com.pinduo.autodemo.R
 import com.pinduo.autodemo.app.global.Constants
 import com.pinduo.autodemo.extensions.isResultSuccess
