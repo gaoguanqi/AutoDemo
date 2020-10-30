@@ -18,7 +18,7 @@ import com.pinduo.autodemo.widget.observers.ObserverListener
 import com.pinduo.autodemo.widget.observers.ObserverManager
 import java.util.*
 
-class LivePlayAccessibility private constructor() : BaseAccessbility(), ObserverListener {
+class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAccessibility>(), ObserverListener {
 
     //com.bytedance.android.livesdk.chatroom.viewmodule.FollowGuideWidget$a
     //com.bytedance.android.livesdk.widget.LiveBottomSheetDialog
@@ -44,9 +44,8 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
     }
 
 
-    override fun initService(service: AccessibilityService) {
-        super.initService(service)
-
+    override fun initService(service: AccessibilityService): LivePlayAccessibility {
+        return super.initService(service)
     }
 
     private var socketClient: SocketClient? = null
@@ -122,7 +121,7 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
 
     private fun startLiveRoom(zhiboNum: String) {
         setLiveURI(zhiboNum)
-        ObserverManager.instance.add(Constants.Task.task3, this)
+        ObserverManager.instance.add(this)
         if (!isInLiveRoom() && !TextUtils.isEmpty(getLiveURI())) {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getLiveURI()))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -148,14 +147,16 @@ class LivePlayAccessibility private constructor() : BaseAccessbility(), Observer
                 setInLiveRoom(true)
             }
 
-            Constants.IgnorePage.IGNORE_LIVE ->{
-                //被遮挡点击操作
-                MyApplication.instance.getUiHandler().sendMessage("被遮挡")
-                LogUtils.logGGQ("被遮挡...")
-                val x = ScreenUtils.getScreenWidth()/2
-                val y = ScreenUtils.getScreenHeight()/2
-                val isClick:Boolean = click(x,y)
-                LogUtils.logGGQ(if(isClick)"点击" else "未点击")
+            Constants.Douyin.PAGE_LIVE_ANCHOR ->{
+                if(isInLiveRoom()) {
+                    //被遮挡点击操作
+                    MyApplication.instance.getUiHandler().sendMessage("被遮挡")
+                    LogUtils.logGGQ("被遮挡...")
+                    val x = ScreenUtils.getScreenWidth() / 2
+                    val y = ScreenUtils.getScreenHeight() / 2
+                    val isClick: Boolean = click(x, y)
+                    LogUtils.logGGQ(if (isClick) "点击" else "未点击")
+                }
             }
         }
 

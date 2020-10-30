@@ -6,7 +6,7 @@ import android.net.Uri
 import cn.vove7.andro_accessibility_api.api.withText
 import com.pinduo.autodemo.app.MyApplication
 
-class CommonAccessbility private constructor():BaseAccessbility() {
+class CommonAccessbility private constructor():BaseAccessbility<CommonAccessbility>() {
 
     companion object {
         val INSTANCE:CommonAccessbility by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED){
@@ -14,10 +14,10 @@ class CommonAccessbility private constructor():BaseAccessbility() {
         }
     }
 
-    override fun initService(service: AccessibilityService) {
-        super.initService(service)
-    }
 
+    override fun initService(service: AccessibilityService): CommonAccessbility {
+        return super.initService(service)
+    }
 
     fun douyin2Main(){
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("snssdk1128://feed?refer=web"))

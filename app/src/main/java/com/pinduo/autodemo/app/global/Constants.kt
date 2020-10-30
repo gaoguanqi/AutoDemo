@@ -42,13 +42,15 @@ class Constants {
         const val task6 = "6"
         const val task9 = "9"
 
-
-
     }
 
     object Douyin {
+
         const val PAGE_MAIN = "com.ss.android.ugc.aweme.main.MainActivity"
         const val PAGE_LIVE_ROOM = "com.ss.android.ugc.aweme.live.LivePlayActivity"
+        //主播头像弹出框
+        const val PAGE_LIVE_ANCHOR= "com.bytedance.android.livesdk.widget.LiveBottomSheetDialog"
+
         //直播间购物车
         const val PAGE_LIVE_CART = "com.bytedance.android.livesdk.livecommerce.dialog.ECBottomDialog"
         //评论

@@ -52,17 +52,16 @@ class MyAccessibilityService :AccessibilityApi(){
 
                 when(it.pageName){
                     Constants.Douyin.PAGE_MAIN ->{
-                        ObserverManager.instance.notifyObserver(Constants.Task.task3,it.pageName)
+
+                        ObserverManager.instance.notifyObserver(it.pageName)
                     }
 
                     Constants.Douyin.PAGE_LIVE_ROOM ->{
-                        ObserverManager.instance.notifyObserver(Constants.Task.task3,it.pageName)
+                        ObserverManager.instance.notifyObserver(it.pageName)
                     }
 
-                    else ->{
-                       if(LivePlayAccessibility.INSTANCE.isInLiveRoom() && it.pageName.contains(Constants.IgnorePage.PAGE_LIVE1)){
-                           ObserverManager.instance.notifyObserver(Constants.Task.task3,Constants.IgnorePage.IGNORE_LIVE)
-                       }
+                    Constants.Douyin.PAGE_LIVE_ANCHOR ->{
+                        ObserverManager.instance.notifyObserver(it.pageName)
                     }
                 }
             }
@@ -82,8 +81,7 @@ class MyAccessibilityService :AccessibilityApi(){
 
 
         CommonAccessbility.INSTANCE.initService(this)
-        LivePlayAccessibility.INSTANCE.initService(this)
-        LivePlayAccessibility.INSTANCE.setSocketClient(socketClient)
+        LivePlayAccessibility.INSTANCE.initService(this).setSocketClient(socketClient)
         MyApplication.instance.getJobManager().addCallback(object :
             JobManagerCallback{
             override fun onJobRun(job: Job, resultCode: Int) {
@@ -237,7 +235,7 @@ class MyAccessibilityService :AccessibilityApi(){
         }
         LivePlayAccessibility.INSTANCE.setInLiveRoom(false)
         LivePlayAccessibility.INSTANCE.setLiveURI("")
-        ObserverManager.instance.remove(Constants.Task.task3)
+        ObserverManager.instance.remove()
         CommonAccessbility.INSTANCE.douyin2Main()
         if(isNormal){
             uiHandler.sendMessage("正常结束")
