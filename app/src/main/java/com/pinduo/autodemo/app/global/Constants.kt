@@ -51,6 +51,7 @@ class Constants {
         //
         const val PAGE_LIVE_GIFT = "com.bytedance.android.livesdk.gift.c.a"
         const val PAGE_LIVE_Follow = "com.bytedance.android.livesdk.chatroom.viewmodule.FollowGuideWidget${'$'}a"
+        const val PAGE_LIVE_MORE = "com.bytedance.android.livesdk.chatroom.viewmodule.toolbar.LiveToolbarMoreDialog"
 
         //直播间购物车
         const val PAGE_LIVE_CART = "com.bytedance.android.livesdk.livecommerce.dialog.ECBottomDialog"

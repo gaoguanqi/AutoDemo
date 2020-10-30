@@ -54,7 +54,8 @@ class MyAccessibilityService :AccessibilityApi(){
                     Constants.Douyin.PAGE_LIVE_ROOM,
                     Constants.Douyin.PAGE_LIVE_ANCHOR,
                     Constants.Douyin.PAGE_LIVE_GIFT,
-                    Constants.Douyin.PAGE_LIVE_Follow ->{
+                    Constants.Douyin.PAGE_LIVE_Follow,
+                    Constants.Douyin.PAGE_LIVE_MORE ->{
                         ObserverManager.instance.notifyObserver(it.pageName)
                     }
                 }

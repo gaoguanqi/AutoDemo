@@ -162,7 +162,8 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
 
             Constants.Douyin.PAGE_LIVE_ANCHOR,
             Constants.Douyin.PAGE_LIVE_GIFT,
-            Constants.Douyin.PAGE_LIVE_Follow ->{
+            Constants.Douyin.PAGE_LIVE_Follow,
+            Constants.Douyin.PAGE_LIVE_MORE ->{
                 if(isInLiveRoom()) {
                     //被遮挡点击操作
                     MyApplication.instance.getUiHandler().sendMessage("被遮挡")
@@ -247,6 +248,13 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
                                                     }
                                                 }
                                         }
+                                    }?:let {
+                                        WaitUtil.sleep(2000L)
+                                        back()
+                                        WaitUtil.sleep(2000L)
+                                        back()
+                                        WaitUtil.sleep(1000L)
+                                        back()
                                     }
                                 }
                             }
