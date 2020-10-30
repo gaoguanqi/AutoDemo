@@ -81,7 +81,7 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
 //                }
 //            }
 //        }
-        withText("说点什么...")?.await(3000L)?.globalClick()?.let {
+        withText("说点什么...")?.globalClick()?.let {
             // 3秒之内 成功查找到节点
             if (it) { //成功点击了该节点
                 WaitUtil.sleep(1000L) //延时1秒
@@ -89,12 +89,12 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
                 if(!TaskUtils.isDouyin1270()){
                     b9q = "com.ss.android.ugc.aweme:id/b40"
                 }
-                withId(b9q)?.await(3000L)?.childAt(0)
+                withId(b9q)?.childAt(0)
                     ?.trySetText(content)?.let { it1 ->
                     //3秒之内 成功查找到该节点的第0个子节点尝试设置评论内容
                     if (it1) {
                         // 设置评论内容成功
-                        withDesc("发送")?.await(1000L)?.globalClick()?.let { it2 ->
+                        withDesc("发送")?.globalClick()?.let { it2 ->
                             //1秒内 成功查找到该节点
                             if (it2) {
                                 //成功点击了该节点
