@@ -237,27 +237,19 @@ class LivePlayAccessibility private constructor() : BaseAccessbility<LivePlayAcc
                                     withType("WebView")?.find()?.let { it3 ->
                                         if (it3.size >= 2) {
                                             it3[1]?.childAt(0)?.childAt(0)?.childAt(0)?.globalClick()
-                                                ?.let { it4 ->
-                                                    if (it4) {
-                                                        WaitUtil.sleep(2000L)
-                                                        back()
-                                                        WaitUtil.sleep(2000L)
-                                                        back()
-                                                        WaitUtil.sleep(1000L)
-                                                        back()
-                                                    }
-                                                }
                                         }
-                                    }?:let {
-                                        WaitUtil.sleep(2000L)
-                                        back()
-                                        WaitUtil.sleep(2000L)
-                                        back()
-                                        WaitUtil.sleep(1000L)
-                                        back()
                                     }
+                                    WaitUtil.sleep(2000L)
+                                    back()
+                                    WaitUtil.sleep(2000L)
+                                    back()
+                                    WaitUtil.sleep(1000L)
+                                    back()
                                 }
                             }
+                        }else{
+                            WaitUtil.sleep(2000L)
+                            back()
                         }
                     }
                 }
